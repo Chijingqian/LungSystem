@@ -28,6 +28,10 @@ jpeg 标签文件： H:\medical_data_for_huodong\taged_picture
 
 ### 数据理解
 - PNG 无损格式，不能存放jpeg，有损
+
+## 明月分割的数据集合统计
+- 训练集
+
 ## 相关视频
 [youtube视频](https://www.youtube.com/watch?v=Dhf6NOVQCjk)
 
@@ -38,6 +42,11 @@ jpeg 标签文件： H:\medical_data_for_huodong\taged_picture
 - [opencv-python文档](https://opencv-python-tutroals.readthedocs.io/en/latest/)
 - [itk-snap](http://www.itksnap.org/download/snap/process.php?link=11443&root=nitrc)可以对数据进行标注
 - [dicom转换.nii.gz](https://www.jianshu.com/p/4a1a2675a61b)
+- [uwsgi参考文档](https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html)
+
+## 参考论文
+- [lung nodule Detection via Deep reinforcement learning]
+- []
 
 
 # 工作计划 
@@ -45,6 +54,9 @@ jpeg 标签文件： H:\medical_data_for_huodong\taged_picture
 - 2019年11月上旬整理了学习了deeplung的代码
 - 2019年11月中旬学习了keras的使用方法
 - 2019年11月下旬了解了自己的数据库，并且查看了明月的代码，完成了初版代码
+- 2019年12月6日，尝试适应Django和一些JS将DICOM文件显示出来,没有尝试成功
+- 2019年12月17日，意识到数据集上的问题，需要重新划分数据集
+- 2019年12月23日，发现了之前我自己实现的deeplung存在缺陷，之前实现的是在python27上的
 
 ## TODO
 - 数据集重新划分
@@ -53,9 +65,4 @@ jpeg 标签文件： H:\medical_data_for_huodong\taged_picture
 - 进行可视化操作
 - 检测数据重新提取
 - boosting方法
-
-
-
-
-
 
