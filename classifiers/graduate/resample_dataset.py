@@ -17,6 +17,21 @@ class ClassificationDataset:
     - 准备测试集合数据
     - 产生训练验证generator
     - 产生测试generator
+    下面是原来数据集的划分
+    --------------------
+    train zero:  19
+    train one:  596
+    train two:  166
+    train three:  24
+    train four:  74
+    --------------------
+    --------------------
+    test zero:  6
+    test one:  30
+    test two:  15
+    test three:  6
+    test four:  10
+    --------------------
     """
     def __init__(self, train_dir, test_dir,batch_size):
         self.train_dir = train_dir
@@ -214,6 +229,7 @@ if __name__ == "__main__":
 
     # test 
     dataset.prepare_test_dataset()
+    
     test = dataset.get_test_dataset()
     print(test[0].shape)
     input()
