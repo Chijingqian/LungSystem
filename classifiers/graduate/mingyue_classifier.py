@@ -1,4 +1,3 @@
-from mycall_back import MyCallback
 import os
 import sys
 sys.path.append(os.path.realpath("."))
@@ -235,15 +234,12 @@ def train(model_name,train_full_set=False,load_weights_path=None):
     # 每隔一轮且每当val_loss降低时保存一次模型
     checkpoint_fixed_name = ModelCheckpoint("/home/liubo/nn_project/LungSystem/workdir/cancer_classifier/model_" + model_name + "_best.hd5",
                                             monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
-
-    my_call_back = MyCallback(filepath=None)
     
     print("len(train_files)",len(train_files))
     print("len(holdout_files)",len(holdout_files))
     model.fit_generator(generator=train_gen, steps_per_epoch=int(len(train_files)/batch_size), epochs=1000, validation_data=holdout_gen,
                         validation_steps=int(len(holdout_files)/batch_size), callbacks=[my_call_back,checkpoint, checkpoint_fixed_name, learnrate_scheduler, TensorBoard(log_dir=log_dir)])
 
-    # model.save("../../models/graduate/model_" + model_name + "_end.hd5")
     model.save("model_" + model_name + "_end.hd5")
 
 

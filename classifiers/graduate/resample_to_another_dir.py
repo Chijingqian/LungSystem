@@ -109,7 +109,7 @@ def resample():
 
     for i in range(len(fold_name_list)):
         for j in range(len(class_dir_name_list)):
-            source_path = augumentation_dir + "/" + class_dir_name_list[i] + "/" +"*.png"
+            source_path = augumentation_dir + "/" + class_dir_name_list[j] + "/" +"*.png"
             source_path_file_list = glob.glob(source_path)
             sample_number = [random.randint(0,len(source_path_file_list)-1) for n in range(2000)]
             target_dir = resample_dir + "/" + fold_name_list[i] +"/"+class_dir_name_list[j]
@@ -123,7 +123,4 @@ def resample():
 if __name__ == "__main__":
     # augumentation()
     resample()
-    
-
-    
     

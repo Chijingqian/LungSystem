@@ -13,12 +13,16 @@ from keras.losses import categorical_crossentropy
 
 
 configs = {
-    "train_dir":"/home/liubo/data/graduate/classification_dataset/train/",
-    "test_dir" :"/home/liubo/data/graduate/classification_dataset/test/",
+    "train_dir_list":["/home/liubo/data/graduate/resampled_classification_dataset/resample/fold1",
+                      "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold2",
+                      "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold3",
+                      "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold4"],
+    "val_dir": "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold0",
+    "test_dir" :"/home/liubo/data/graduate/resampled_classification_dataset/resample/fold0",
     "batch_size" : 8,
-    "log_dir":"./logs/000",
-    "model_name":"cancer_classifier",
-    "model_save_path":"/home/liubo/nn_project/LungSystem/models/guaduate/model_cancer_classifier_best.hd5",
+    "log_dir":"./logs/full_con_classifier",
+    "model_name":"full_con_classifier",
+    "model_save_path":"/home/liubo/nn_project/LungSystem/models/guaduate/full_con_classifier",
     "learn_rate":0.0001
 }
 
@@ -75,14 +79,15 @@ def train(model_name,load_weight_path=None):
     :param model_name: 模型名称
     :param load_weight_path:之前的预训练模型
     """
-    train_dir = configs["train_dir"]
+    train_dir_list = configs["train_dir_list"]
+    val_dir = configs["val_dir"]
     test_dir = configs["test_dir"]
     batch_size = configs["batch_size"]
-    dataset= ClassificationDataset(train_dir,test_dir,batch_size)
+    dataset= ClassificationDataset(train_dir_list,val_dir,test_dir,batch_size)
     dataset.prepare_train_val_dataset()
-    train_resampled,val_resampled = dataset.get_resampled_train_val_dataset(train_n=80,val_n=20)
-    train_gen = dataset.data_generator(batch_size=8,record_list=train_resampled,is_train_set=True)
-    val_gen = dataset.data_generator(batch_size=8,record_list=val_resampled,is_train_set=False)
+    train_data,val_data = dataset.get_train_val_dataset()
+    train_gen = dataset.data_generator(batch_size=8,record_list=train_data,is_train_set=True)
+    val_gen = dataset.data_generator(batch_size=8,record_list=val_data,is_train_set=False)
 
     model = get_net()
     # 每隔1轮保存一次模型
@@ -92,24 +97,22 @@ def train(model_name,load_weight_path=None):
     checkpoint_fixed_name = ModelCheckpoint("/home/liubo/nn_project/LungSystem/workdir/cancer_classifier/model_" + model_name + "_best.hd5",
                                             monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
     model.fit_generator(generator=train_gen, 
-                        steps_per_epoch=int(len(train_resampled)/batch_size), 
+                        steps_per_epoch=int(len(train_data)/batch_size), 
                         epochs=1000, 
                         validation_data=val_gen,
-                        validation_steps=int(len(val_resampled)/batch_size), 
+                        validation_steps=int(len(val_data)/batch_size), 
                         callbacks=[checkpoint, 
                                    checkpoint_fixed_name, 
                                    TensorBoard(log_dir=configs["log_dir"])])
 
 
-
 if __name__ == "__main__":
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = "2,3"
-    model_path_dir = "/home/liubo/nn_project/LungSystem/models/guaduate/"
-    if not os.path.exists("models/guaduate/"):
-        os.mkdir("models/guaduate/")
-    model_name = "model_full_con_classifier_best.hd5"
-    train(model_name=configs["model_name"])
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
+    if not os.path.exists("models/guaduate/full_con_classifier"):
+        os.mkdir("models/guaduate/full_con_classifier")
+    model_name = configs["model_name"]
+    train(model_name=model_name)
     # TODO copy best model
 
 
