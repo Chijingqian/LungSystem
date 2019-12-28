@@ -7,3 +7,19 @@
 2. lung nodule Detection via Deep reinforcement learning
 > 阅读时间： 2019.12 <br>
 > 阅读感受：相当无语，就是个有无癌症的二分类，效果还贼差，还非得蹭强化学习的热度，还没有代码，辣鸡！！！
+
+3. Co-Learning Feature Fusion Maps from PET-CT Images of Lung Cancer
+> 阅读时间：2019.12 <br>
+> 阅读感受：综合了CT 和 PET 数据 ，分三个角度做了实验，总的来说实验比较有意思，有比较大的参考价值
+> - 输入就合并
+> - 先有两个 encoder 然后 赋予不同权重合并  
+> - 输出结果合并
+
+4. NoduleNet: Decoupled False Positive Reduction for Pulmonary Nodule Detection and Segmentation
+> 阅读时间：2019.12 <br>
+> 阅读感受：将肺癌检测分成了三个阶段， 是一个端到端的检测网络
+
+
+
+# 待阅读论文
+- Evaluate the Malignancy of Pulmonary Nodules Using the 3D Deep Leaky Noisy-or Network (清华大学DSB2017 竞赛)
