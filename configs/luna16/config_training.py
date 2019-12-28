@@ -12,8 +12,8 @@ lung segmentation: a directory that contains the lung segmentation for CT images
 additional_annotations.csv: csv file that contain additional nodule annotations from our observer study. The file will be available soon
 """
 
-LUNA16ROOTPATH="/home/liubo/data/LUNA16/"  # 原来的数据集跟目录
-LUNA16PROCESSPATH="/home/liubo/data/LUNA16_PROCESS_NEW/" # 处理结果
+LUNA16ROOTPATH="/home/liubo/data/LUNA16/"  # 原来的数据集根目录
+LUNA16PROCESSPATH="/home/liubo/data/LUNA16_PROCESS/" # 处理结果
 
 
 config = {'luna_root':LUNA16ROOTPATH,
