@@ -109,3 +109,6 @@ venv.bak/
 # workdir & log
 workdir/
 logs/
+
+#  可视化
+visualizing/
