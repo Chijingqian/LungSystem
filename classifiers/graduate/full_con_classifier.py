@@ -9,6 +9,7 @@ from keras.metrics import categorical_accuracy, binary_crossentropy
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler, TensorBoard
 from keras.optimizers import Adam, SGD
 from keras.losses import categorical_crossentropy
+import time
 
 
 
@@ -20,7 +21,7 @@ configs = {
     "val_dir": "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold0",
     "test_dir" :"/home/liubo/data/graduate/resampled_classification_dataset/resample/fold0",
     "batch_size" : 8,
-    "log_dir":"./logs/full_con_classifier",
+    "log_dir":"./logs/full_con_classifier"+ time.strftime("%Y%m%d_%H%M%S", time.localtime()),
     "model_name":"full_con_classifier",
     "model_save_path":"/home/liubo/nn_project/LungSystem/models/guaduate/full_con_classifier",
     "learn_rate":0.0001
@@ -91,14 +92,16 @@ def train(model_name,load_weight_path=None):
 
     model = get_net()
     # 每隔1轮保存一次模型
-    checkpoint = ModelCheckpoint(filepath="/home/liubo/nn_project/LungSystem/workdir/cancer_classifier/model_" + model_name + "_" + "_e" + "{epoch:02d}-{val_loss:.4f}.hd5",
+    if not os.path.exists("workdir/full_con_classifier"):
+        os.mkdir("workdir/full_con_classifier")
+    checkpoint = ModelCheckpoint(filepath="/home/liubo/nn_project/LungSystem/workdir/full_con_classifier/model_" + model_name + "_" + "_e" + "{epoch:02d}-{val_loss:.4f}.hd5",
                                  monitor='val_loss', verbose=1, save_best_only=False, save_weights_only=False, mode='auto', period=1)
     # 每隔一轮且每当val_loss降低时保存一次模型
-    checkpoint_fixed_name = ModelCheckpoint("/home/liubo/nn_project/LungSystem/workdir/cancer_classifier/model_" + model_name + "_best.hd5",
+    checkpoint_fixed_name = ModelCheckpoint("/home/liubo/nn_project/LungSystem/workdir/full_con_classifier/model_" + model_name + "_best.hd5",
                                             monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
     model.fit_generator(generator=train_gen, 
                         steps_per_epoch=int(len(train_data)/batch_size), 
-                        epochs=1000, 
+                        epochs=100, 
                         validation_data=val_gen,
                         validation_steps=int(len(val_data)/batch_size), 
                         callbacks=[checkpoint, 
