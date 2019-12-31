@@ -33,8 +33,8 @@ jpeg 标签文件： H:\medical_data_for_huodong\taged_picture
 - 训练集
 
 ## 相关资料
-[youtube视频](https://www.youtube.com/watch?v=Dhf6NOVQCjk)
-[明月参考的databowl]（https://github.com/dhammack/DSB2017）
+- [youtube视频](https://www.youtube.com/watch?v=Dhf6NOVQCjk)
+- [明月参考的databowl]（https://github.com/dhammack/DSB2017）
 ## 相关文档
 - [Grad-cam](https://arxiv.org/abs/1610.02391)
 - [关于医疗影像的mhd和dcm格式图像的读取和坐标转换](https://blog.csdn.net/zyc2017/article/details/84030903)
