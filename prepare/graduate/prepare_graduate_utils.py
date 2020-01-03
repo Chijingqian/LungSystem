@@ -1,4 +1,6 @@
-
+"""
+此文件跑在windows服务器上
+"""
 import cv2
 import numpy as np 
 import os
