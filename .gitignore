@@ -112,3 +112,6 @@ logs/
 
 #  可视化
 visualizing/
+
+# 模型
+models/
