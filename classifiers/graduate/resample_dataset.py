@@ -88,11 +88,11 @@ class ClassificationDataset:
 
     def prepare_test_dataset(self):
         test_dir = self.test_dir
-        self.test_zero_samples = glob.glob(test_dir+'zero/' + '*.png')
-        self.test_one_samples = glob.glob(test_dir + 'one/' + "*.png")
-        self.test_two_samples = glob.glob(test_dir + 'two/' + "*.png")
-        self.test_three_samples = glob.glob(test_dir + 'three/' + "*.png")
-        self.test_four_samples = glob.glob(test_dir + 'four/' + "*.png")
+        self.test_zero_samples = glob.glob(test_dir+'/zero/' + '*.png')
+        self.test_one_samples = glob.glob(test_dir + '/one/' + "*.png")
+        self.test_two_samples = glob.glob(test_dir + '/two/' + "*.png")
+        self.test_three_samples = glob.glob(test_dir + '/three/' + "*.png")
+        self.test_four_samples = glob.glob(test_dir + '/four/' + "*.png")
 
         self.test_origin_path = [self.test_zero_samples,
                                  self.test_one_samples,

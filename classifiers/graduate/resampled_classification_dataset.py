@@ -13,9 +13,10 @@ four  74 + 10 = 84           84 *3  = 252
 
 
 本脚本说明：
-脚本分两部
-1. 在total中生成augumentation
-2. 在augumentation中生成 5折交叉验证 subset0 - subset4
+脚本分三部
+1. 用total 分成 五折 classify_to_5_fold
+2. 进行数据增强 augumentation （）
+2. 重采样 resample 200张 * 5类 * 5折
 
 """
 import os

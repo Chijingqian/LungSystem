@@ -10,20 +10,42 @@ from keras.callbacks import ModelCheckpoint, LearningRateScheduler, TensorBoard
 from keras.optimizers import Adam, SGD
 from keras.losses import categorical_crossentropy
 import time
+import shutil
 
+# base 配置
+# model_name = "full_con_classifier_base"
+# # time_str = time.strftime("%Y%m%d_%H%M%S", time.localtime())
+# time_str = "20200104_231603"
+# configs = {
+#     "train_dir_list":["/home/liubo/data/graduate/resampled_classification_dataset/resample/fold1",
+#                       "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold2",
+#                       "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold3",
+#                       "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold4"],
+#     "val_dir": "/home/liubo/data/graduate/resampled_classification_dataset/origin_5_fold/fold0", # 验证集不用增强
+#     "test_dir" :"/home/liubo/data/graduate/resampled_classification_dataset/origin_5_fold/fold0",  # 测试在 predict中用到
+#     "batch_size" : 8,
+#     "log_dir":"./logs/"+ model_name+time_str,
+#     "work_dir":"/home/liubo/nn_project/LungSystem/workdir/" + model_name+time_str,
+#     "model_name": model_name,
+#     "model_save_path":"/home/liubo/nn_project/LungSystem/models/guaduate/" + model_name,
+#     "learn_rate":0.0001
+# }
 
-
+# 数据增强配置
+model_name = "full_con_classifier_augu"
+time_str = time.strftime("%Y%m%d_%H%M%S", time.localtime())
 configs = {
-    "train_dir_list":["/home/liubo/data/graduate/resampled_classification_dataset/resample/fold1",
-                      "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold2",
-                      "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold3",
-                      "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold4"],
-    "val_dir": "/home/liubo/data/graduate/resampled_classification_dataset/resample/fold0",
-    "test_dir" :"/home/liubo/data/graduate/resampled_classification_dataset/resample/fold0",
+    "train_dir_list":["/home/liubo/data/graduate/resampled_augumentation_classification_dataset/resample/fold1",
+                      "/home/liubo/data/graduate/resampled_augumentation_classification_dataset/resample/fold2",
+                      "/home/liubo/data/graduate/resampled_augumentation_classification_dataset/resample/fold3",
+                      "/home/liubo/data/graduate/resampled_augumentation_classification_dataset/resample/fold4"],
+    "val_dir": "/home/liubo/data/graduate/resampled_augumentation_classification_dataset/origin_5_fold/fold0", # 验证集不用增强
+    "test_dir" :"/home/liubo/data/graduate/resampled_augumentation_classification_dataset/origin_5_fold/fold0",  # 测试在 predict中用到
     "batch_size" : 8,
-    "log_dir":"./logs/full_con_classifier"+ time.strftime("%Y%m%d_%H%M%S", time.localtime()),
-    "model_name":"full_con_classifier",
-    "model_save_path":"/home/liubo/nn_project/LungSystem/models/guaduate/full_con_classifier",
+    "log_dir":"./logs/"+ model_name+time_str,
+    "work_dir":"/home/liubo/nn_project/LungSystem/workdir/" + model_name+time_str,
+    "model_name": model_name,
+    "model_save_path":"/home/liubo/nn_project/LungSystem/models/guaduate/" + model_name,
     "learn_rate":0.0001
 }
 
@@ -58,7 +80,7 @@ def get_net(input_shape=(64, 64, 64, 1), load_weight_path=None, features=False) 
 
     out_class = Convolution3D(5, (1, 1, 1), activation="softmax", name="out_class_last")(last64)
     out_class = Flatten(name="out_class")(out_class)
-    
+
     model = Model(inputs=inputs, outputs=out_class)
 
     if load_weight_path is not None:  
@@ -84,6 +106,7 @@ def train(model_name,load_weight_path=None):
     val_dir = configs["val_dir"]
     test_dir = configs["test_dir"]
     batch_size = configs["batch_size"]
+    work_dir = configs["work_dir"]
     dataset= ClassificationDataset(train_dir_list,val_dir,test_dir,batch_size)
     dataset.prepare_train_val_dataset()
     train_data,val_data = dataset.get_train_val_dataset()
@@ -92,13 +115,25 @@ def train(model_name,load_weight_path=None):
 
     model = get_net()
     # 每隔1轮保存一次模型
-    if not os.path.exists("workdir/full_con_classifier"):
-        os.mkdir("workdir/full_con_classifier")
-    checkpoint = ModelCheckpoint(filepath="/home/liubo/nn_project/LungSystem/workdir/full_con_classifier/model_" + model_name + "_" + "_e" + "{epoch:02d}-{val_loss:.4f}.hd5",
-                                 monitor='val_loss', verbose=1, save_best_only=False, save_weights_only=False, mode='auto', period=1)
+
+    if not os.path.exists(work_dir):
+        os.makedirs(work_dir)
+    checkpoint = ModelCheckpoint(filepath=work_dir+ "/" + model_name + "_" + "_e" + "{epoch:02d}-{val_loss:.4f}.hd5",
+                                 monitor='val_loss', 
+                                 verbose=1, 
+                                 save_best_only=False, 
+                                 save_weights_only=False, 
+                                 mode='auto', 
+                                 period=1)
     # 每隔一轮且每当val_loss降低时保存一次模型
-    checkpoint_fixed_name = ModelCheckpoint("/home/liubo/nn_project/LungSystem/workdir/full_con_classifier/model_" + model_name + "_best.hd5",
-                                            monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+    best_model_path = work_dir + "/" + model_name + "_best.hd5"
+    checkpoint_fixed_name = ModelCheckpoint(filepath = best_model_path,
+                                            monitor='val_loss', 
+                                            verbose=1, 
+                                            save_best_only=True, 
+                                            save_weights_only=False, 
+                                            mode='auto', 
+                                            period=1)
     model.fit_generator(generator=train_gen, 
                         steps_per_epoch=int(len(train_data)/batch_size), 
                         epochs=100, 
@@ -112,12 +147,15 @@ def train(model_name,load_weight_path=None):
 if __name__ == "__main__":
 
     os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
-    if not os.path.exists("models/guaduate/full_con_classifier"):
-        os.mkdir("models/guaduate/full_con_classifier")
+    model_save_path = configs["model_save_path"]
+    if not os.path.exists(model_save_path):
+        os.makedirs(model_save_path)
     model_name = configs["model_name"]
+    work_dir = configs["work_dir"]
     train(model_name=model_name)
-    # TODO copy best model
-
+    best_model_path = work_dir + "/" + model_name + "_best.hd5"
+    shutil.copy(best_model_path, model_save_path)
+    
 
     
     
